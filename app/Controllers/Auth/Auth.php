@@ -94,28 +94,28 @@ class Auth extends BaseController
             ]);
         } else {
             // verifikasi captcha
-            // $secret = getenv('SECRETKEY');
+            $secret = getenv('SECRETKEY');
 
-            // $credential = array(
-            //     'secret' => $secret,
-            //     'response' => $this->request->getVar('g-recaptcha-response')
-            // );
+            $credential = array(
+                'secret' => $secret,
+                'response' => $this->request->getVar('g-recaptcha-response')
+            );
 
-            // $verify = curl_init();
-            // curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-            // curl_setopt($verify, CURLOPT_POST, true);
-            // curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($credential));
-            // curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
-            // curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
-            // $response = curl_exec($verify);
-            // curl_close($verify);
+            $verify = curl_init();
+            curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+            curl_setopt($verify, CURLOPT_POST, true);
+            curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($credential));
+            curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($verify);
+            curl_close($verify);
 
-            // $status = json_decode($response, true);
-            // if (!$status['success']) {
-            //     return view('Auth/v_login', [
-            //         'captcha' => 'Verifikasi CAPTCHA!'
-            //     ]);
-            // }
+            $status = json_decode($response, true);
+            if (!$status['success']) {
+                return view('Auth/v_login', [
+                    'captcha' => 'Verifikasi CAPTCHA!'
+                ]);
+            }
 
             $member = new UserModel();
             $memberInfo = $member->where($fieldType, $username)->first();
